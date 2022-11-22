@@ -1,4 +1,8 @@
 FROM mcr.microsoft.com/mssql/server:2019-CU9-ubuntu-16.04
+LABEL org.opencontainers.image.source=https://github.com/yanpitangui/docker-sqlserver-fts
+LABEL org.opencontainers.image.description="This repo contains the dockerfile for a sqlserver with Full Text Search pre installed"
+LABEL org.opencontainers.image.licenses=MIT
+
 USER root
 RUN apt-get -y update && \
     apt-get install -yq curl apt-transport-https && \
