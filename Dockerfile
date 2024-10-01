@@ -1,19 +1,25 @@
-FROM mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
+# Base OS layer: Latest Ubuntu LTS
+FROM --platform=linux/amd64 ubuntu:focal
 LABEL org.opencontainers.image.source=https://github.com/yanpitangui/mssql-server-fts
 LABEL org.opencontainers.image.description="This repo contains the dockerfile for a sqlserver with Full Text Search pre installed"
 LABEL org.opencontainers.image.licenses=MIT
-
-USER root
+# Install prerequistes since it is needed to get repo config for SQL server
 RUN export DEBIAN_FRONTEND=noninteractive && \
-    apt-get -y update && \
-    apt-get install -yq curl apt-transport-https gnupg && \
-    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list | tee /etc/apt/sources.list.d/mssql-server.list && \
     apt-get update && \
+    apt-get install -yq curl apt-transport-https gnupg && \
+    # Get official Microsoft repository configuration
+    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb --output packages-microsoft-prod.deb && dpkg -i packages-microsoft-prod.deb && \
+    curl https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list | tee /etc/apt/sources.list.d/mssql-server.list && \
+    apt-get update  && \
+    # Install SQL Server from apt
+    apt-get install -y mssql-server && \
+    # Install optional packages
     apt-get install -y mssql-server-fts && \
-    apt-get clean && \ 
+    ACCEPT_EULA=Y apt-get install -y mssql-tools && \
+    # Cleanup the Dockerfile
+    apt-get clean && \
     rm -rf /var/lib/apt/lists
 
-USER mssql
-
+# Run SQL Server process
 CMD /opt/mssql/bin/sqlservr
