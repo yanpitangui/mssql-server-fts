@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.licenses=MIT
 USER root
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get -y update && \
-    apt-get install -yq curl apt-transport-https && \
+    apt-get install -yq curl apt-transport-https gnupg && \
     curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list | tee /etc/apt/sources.list.d/mssql-server.list && \
     apt-get update && \
