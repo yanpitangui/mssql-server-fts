@@ -1,5 +1,5 @@
 # Base OS layer: Latest Ubuntu LTS
-FROM --platform=linux/amd64 ubuntu:focal
+FROM --platform=linux/amd64 phusion/baseimage:jammy-1.0.4
 LABEL org.opencontainers.image.source=https://github.com/yanpitangui/mssql-server-fts
 LABEL org.opencontainers.image.description="This repo contains the dockerfile for a sqlserver with Full Text Search pre installed"
 LABEL org.opencontainers.image.licenses=MIT
